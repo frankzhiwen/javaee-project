@@ -29,7 +29,7 @@
 
 ### 用户登录
 
-<img src="assets\用户登录.png" style="zoom:60%;float:left;" />
+<img src=".\assets\用户登录.png" style="zoom:60%;float:left;" />
 
 ### 用户管理（可不实现）
 
