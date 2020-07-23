@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.DormMapper">
+  <resultMap id="BaseResultMap" type="frank.model.Dorm">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dorm_no" jdbcType="VARCHAR" property="dormNo" />
+    <result column="dorm_desc" jdbcType="VARCHAR" property="dormDesc" />
+    <result column="building_id" jdbcType="INTEGER" property="buildingId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dorm_no, dorm_desc, building_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dorm
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dorm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.Dorm">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dorm (dorm_no, dorm_desc, building_id, 
+      create_time)
+    values (#{dormNo,jdbcType=VARCHAR}, #{dormDesc,jdbcType=VARCHAR}, #{buildingId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.Dorm">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dorm
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dormNo != null">
+        dorm_no,
+      </if>
+      <if test="dormDesc != null">
+        dorm_desc,
+      </if>
+      <if test="buildingId != null">
+        building_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dormNo != null">
+        #{dormNo,jdbcType=VARCHAR},
+      </if>
+      <if test="dormDesc != null">
+        #{dormDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.Dorm">
+    update dorm
+    <set>
+      <if test="dormNo != null">
+        dorm_no = #{dormNo,jdbcType=VARCHAR},
+      </if>
+      <if test="dormDesc != null">
+        dorm_desc = #{dormDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.Dorm">
+    update dorm
+    set dorm_no = #{dormNo,jdbcType=VARCHAR},
+      dorm_desc = #{dormDesc,jdbcType=VARCHAR},
+      building_id = #{buildingId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.Dorm" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dorm
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dormNo != null">
+        dorm_no = #{dormNo,jdbcType=VARCHAR}
+      </if>
+      <if test="dormDesc != null">
+        dorm_desc = #{dormDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, dorm_no, dorm_desc, building_id, create_time
+    from dorm
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.Dorm" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dorm
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dormNo != null">
+        dorm_no = #{dormNo,jdbcType=VARCHAR}
+      </if>
+      <if test="dormDesc != null">
+        dorm_desc = #{dormDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="buildingId != null">
+        building_id = #{buildingId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from dorm
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <select id="query" parameterType="frank.model.Dorm" resultMap="BaseResultMap">
+    SELECT
+    d.id,
+    d.dorm_no,
+    d.dorm_desc,
+    d.building_id,
+    b.building_name,
+    d.create_time
+    FROM
+    dorm d
+    JOIN building b ON d.building_id = b.id
+    <if test="searchText != null and searchText != ''">
+      where d.dorm_no like concat('%', #{searchText}, '%')
+    </if>
+    ORDER BY b.building_name,d.dorm_no
+    <if test="sortOrder != null and sortOrder != ''">
+      ${sortOrder}
+    </if>
+  </select>
+
+  <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+            d.id,
+            d.dorm_no,
+            d.dorm_desc,
+            d.building_id,
+            b.building_name,
+            d.create_time
+        FROM
+            dorm d
+                JOIN building b ON d.building_id = b.id
+        WHERE
+            d.id = #{id}
+    </select>
+
+  <select id="queryAsDict" parameterType="java.lang.String" resultMap="frank.mapper.DictionaryTagMapper.BaseResultMap">
+        SELECT
+            d.id dictionary_tag_key,
+            d.dorm_no dictionary_tag_value
+        FROM
+            dorm d
+                JOIN building b ON d.building_id = b.id
+        WHERE
+            b.id = #{dictionaryKey}
+    </select>
+</mapper>

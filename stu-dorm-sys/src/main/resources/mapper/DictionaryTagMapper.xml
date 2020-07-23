@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.DictionaryTagMapper">
+  <resultMap id="BaseResultMap" type="frank.model.DictionaryTag">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dictionary_tag_key" jdbcType="VARCHAR" property="dictionaryTagKey" />
+    <result column="dictionary_tag_value" jdbcType="VARCHAR" property="dictionaryTagValue" />
+    <result column="dictionary_tag_desc" jdbcType="VARCHAR" property="dictionaryTagDesc" />
+    <result column="dictionary_id" jdbcType="INTEGER" property="dictionaryId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dictionary_tag_key, dictionary_tag_value, dictionary_tag_desc, dictionary_id, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary_tag
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dictionary_tag
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.DictionaryTag">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dictionary_tag (dictionary_tag_key, dictionary_tag_value, 
+      dictionary_tag_desc, dictionary_id, create_time
+      )
+    values (#{dictionaryTagKey,jdbcType=VARCHAR}, #{dictionaryTagValue,jdbcType=VARCHAR}, 
+      #{dictionaryTagDesc,jdbcType=VARCHAR}, #{dictionaryId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.DictionaryTag">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dictionary_tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dictionaryTagKey != null">
+        dictionary_tag_key,
+      </if>
+      <if test="dictionaryTagValue != null">
+        dictionary_tag_value,
+      </if>
+      <if test="dictionaryTagDesc != null">
+        dictionary_tag_desc,
+      </if>
+      <if test="dictionaryId != null">
+        dictionary_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dictionaryTagKey != null">
+        #{dictionaryTagKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryTagValue != null">
+        #{dictionaryTagValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryTagDesc != null">
+        #{dictionaryTagDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryId != null">
+        #{dictionaryId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.DictionaryTag">
+    update dictionary_tag
+    <set>
+      <if test="dictionaryTagKey != null">
+        dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryTagValue != null">
+        dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryTagDesc != null">
+        dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryId != null">
+        dictionary_id = #{dictionaryId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.DictionaryTag">
+    update dictionary_tag
+    set dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR},
+      dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR},
+      dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR},
+      dictionary_id = #{dictionaryId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.DictionaryTag" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary_tag
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dictionaryTagKey != null">
+        dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryTagValue != null">
+        dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryTagDesc != null">
+        dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryId != null">
+        dictionary_id = #{dictionaryId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, dictionary_tag_key, dictionary_tag_value, dictionary_tag_desc, dictionary_id, 
+    create_time
+    from dictionary_tag
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.DictionaryTag" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary_tag
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dictionaryTagKey != null">
+        dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryTagValue != null">
+        dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryTagDesc != null">
+        dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryId != null">
+        dictionary_id = #{dictionaryId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from dictionary_tag
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <select id="selectByFullKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+            concat( d.dictionary_key, dt.dictionary_tag_key) dictionary_tag_key,
+            dt.dictionary_tag_value
+        FROM
+            dictionary d
+                JOIN dictionary_tag dt ON d.id = dt.dictionary_id
+        WHERE
+            d.dictionary_key = #{dictionaryKey}
+    </select>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.BorrowRecordMapper">
+  <resultMap id="BaseResultMap" type="frank.model.BorrowRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="book_id" jdbcType="INTEGER" property="bookId" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <association property="classes"
+                 resultMap="frank.mapper.ClassesMapper.BaseResultMap"
+                 columnPrefix="prefix_c_" />
+    <association property="student"
+                 resultMap="frank.mapper.StudentMapper.BaseResultMap"
+                 columnPrefix="prefix_s_" />
+    <association property="book"
+                 resultMap="frank.mapper.BookMapper.BaseResultMap"
+                 columnPrefix="prefix_b_" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, book_id, student_id, start_time, end_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from borrow_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.BorrowRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into borrow_record (book_id, student_id, start_time, 
+      end_time, create_time)
+    values (#{bookId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.BorrowRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into borrow_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        book_id,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.BorrowRecord">
+    update borrow_record
+    <set>
+      <if test="bookId != null">
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.BorrowRecord">
+    update borrow_record
+    set book_id = #{bookId,jdbcType=INTEGER},
+      student_id = #{studentId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.BorrowRecord" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="bookId != null">
+        book_id = #{bookId,jdbcType=INTEGER}
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, book_id, student_id, start_time, end_time, create_time
+    from borrow_record
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.BorrowRecord" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from borrow_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="bookId != null">
+        book_id = #{bookId,jdbcType=INTEGER}
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from borrow_record
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <sql id="queryWithClasses">
+      SELECT
+          br.id,
+          br.start_time,
+          br.end_time,
+          br.create_time,
+          b.id prefix_b_id,
+          b.book_name prefix_b_book_name,
+          b.author prefix_b_author,
+          b.price prefix_b_price,
+          s.id prefix_s_id,
+          s.student_name prefix_s_student_name,
+          s.student_no prefix_s_student_no,
+          s.id_card prefix_s_id_card,
+          s.student_email prefix_s_student_email,
+          c.id prefix_c_id,
+          c.classes_name prefix_c_classes_name,
+          c.classes_desc prefix_c_classes_desc,
+          c.classes_major prefix_c_classes_major,
+          c.classes_graduate_year prefix_c_classes_graduate_year
+      FROM
+          borrow_record br
+          JOIN book b ON br.book_id = b.id
+          JOIN student s ON br.student_id = s.id
+          JOIN classes c ON s.classes_id = c.id
+  </sql>
+  <select id="query" parameterType="frank.model.Student" resultMap="BaseResultMap">
+    <include refid="queryWithClasses" />
+    <if test="searchText != null and searchText != ''">
+      where s.student_name like concat('%', #{searchText}, '%')
+    </if>
+  </select>
+  <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <include refid="queryWithClasses" />
+    where
+    br.id = #{id}
+  </select>
+</mapper>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.StudentMapper">
+  <resultMap id="BaseResultMap" type="frank.model.Student">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="student_name" jdbcType="VARCHAR" property="studentName" />
+    <result column="student_graduate_year" jdbcType="VARCHAR" property="studentGraduateYear" />
+    <result column="student_major" jdbcType="VARCHAR" property="studentMajor" />
+    <result column="student_email" jdbcType="VARCHAR" property="studentEmail" />
+    <result column="dorm_id" jdbcType="INTEGER" property="dormId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, student_name, student_graduate_year, student_major, student_email, dorm_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.Student">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into student (student_name, student_graduate_year, 
+      student_major, student_email, dorm_id, 
+      create_time)
+    values (#{studentName,jdbcType=VARCHAR}, #{studentGraduateYear,jdbcType=VARCHAR}, 
+      #{studentMajor,jdbcType=VARCHAR}, #{studentEmail,jdbcType=VARCHAR}, #{dormId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.Student">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="studentName != null">
+        student_name,
+      </if>
+      <if test="studentGraduateYear != null">
+        student_graduate_year,
+      </if>
+      <if test="studentMajor != null">
+        student_major,
+      </if>
+      <if test="studentEmail != null">
+        student_email,
+      </if>
+      <if test="dormId != null">
+        dorm_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="studentName != null">
+        #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentGraduateYear != null">
+        #{studentGraduateYear,jdbcType=VARCHAR},
+      </if>
+      <if test="studentMajor != null">
+        #{studentMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="studentEmail != null">
+        #{studentEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="dormId != null">
+        #{dormId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.Student">
+    update student
+    <set>
+      <if test="studentName != null">
+        student_name = #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentGraduateYear != null">
+        student_graduate_year = #{studentGraduateYear,jdbcType=VARCHAR},
+      </if>
+      <if test="studentMajor != null">
+        student_major = #{studentMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="studentEmail != null">
+        student_email = #{studentEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="dormId != null">
+        dorm_id = #{dormId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.Student">
+    update student
+    set student_name = #{studentName,jdbcType=VARCHAR},
+      student_graduate_year = #{studentGraduateYear,jdbcType=VARCHAR},
+      student_major = #{studentMajor,jdbcType=VARCHAR},
+      student_email = #{studentEmail,jdbcType=VARCHAR},
+      dorm_id = #{dormId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.Student" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    <trim prefix="where" suffixOverrides="and">
+      <if test="studentName != null">
+        student_name = #{studentName,jdbcType=VARCHAR}
+      </if>
+      <if test="studentGraduateYear != null">
+        student_graduate_year = #{studentGraduateYear,jdbcType=VARCHAR}
+      </if>
+      <if test="studentMajor != null">
+        student_major = #{studentMajor,jdbcType=VARCHAR}
+      </if>
+      <if test="studentEmail != null">
+        student_email = #{studentEmail,jdbcType=VARCHAR}
+      </if>
+      <if test="dormId != null">
+        dorm_id = #{dormId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, student_name, student_graduate_year, student_major, student_email, dorm_id, 
+    create_time
+    from student
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.Student" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    <trim prefix="where" suffixOverrides="and">
+      <if test="studentName != null">
+        student_name = #{studentName,jdbcType=VARCHAR}
+      </if>
+      <if test="studentGraduateYear != null">
+        student_graduate_year = #{studentGraduateYear,jdbcType=VARCHAR}
+      </if>
+      <if test="studentMajor != null">
+        student_major = #{studentMajor,jdbcType=VARCHAR}
+      </if>
+      <if test="studentEmail != null">
+        student_email = #{studentEmail,jdbcType=VARCHAR}
+      </if>
+      <if test="dormId != null">
+        dorm_id = #{dormId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from student
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <select id="query" parameterType="frank.model.Student" resultMap="BaseResultMap">
+    SELECT
+    s.id,
+    s.student_name,
+    s.student_graduate_year,
+    s.student_major,
+    s.student_email,
+    s.dorm_id,
+    s.create_time,
+    b.id building_id,
+    b.building_name,
+    d.dorm_no
+    FROM
+    student s
+    JOIN dorm d ON s.dorm_id = d.id
+    JOIN building b ON d.building_id = b.id
+    <if test="searchText != null and searchText != ''">
+      where s.student_name like concat('%', #{searchText}, '%')
+    </if>
+    ORDER BY s.student_name
+    <if test="sortOrder != null and sortOrder != ''">
+      ${sortOrder}
+    </if>
+  </select>
+  <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+            s.id,
+            s.student_name,
+            s.student_graduate_year,
+            s.student_major,
+            s.student_email,
+            s.dorm_id,
+            s.create_time,
+            b.id building_id,
+            b.building_name,
+            d.dorm_no
+        FROM
+            student s
+                JOIN dorm d ON s.dorm_id = d.id
+                JOIN building b ON d.building_id = b.id
+        WHERE
+            s.id = #{id}
+    </select>
+  <update id="apply" parameterType="frank.model.Student">
+    UPDATE student
+    SET dorm_id = #{dormId}
+    WHERE
+    id IN
+    <foreach collection="ids" open="(" separator="," close=")" item="item">
+      #{item}
+    </foreach>
+  </update>
+</mapper>

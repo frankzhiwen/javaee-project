@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.ExamRecordMapper">
+  <resultMap id="BaseResultMap" type="frank.model.ExamRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="score" jdbcType="DECIMAL" property="score" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="exam_id" jdbcType="INTEGER" property="examId" />
+    <result column="exam_record_desc" jdbcType="VARCHAR" property="examRecordDesc" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <association property="exam"
+                 resultMap="frank.mapper.ExamMapper.BaseResultMap"
+                 columnPrefix="prefix_e_" />
+    <association property="student"
+                 resultMap="frank.mapper.StudentMapper.BaseResultMap"
+                 columnPrefix="prefix_stu_" />
+    <association property="classes"
+                 resultMap="frank.mapper.ClassesMapper.BaseResultMap"
+                 columnPrefix="prefix_cls_" />
+    <association property="course"
+                 resultMap="frank.mapper.CourseMapper.BaseResultMap"
+                 columnPrefix="prefix_cou_" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, score, student_id, exam_id, exam_record_desc, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from exam_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from exam_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.ExamRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into exam_record (score, student_id, exam_id, 
+      exam_record_desc, create_time)
+    values (#{score,jdbcType=DECIMAL}, #{studentId,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, 
+      #{examRecordDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.ExamRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into exam_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="score != null">
+        score,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="examId != null">
+        exam_id,
+      </if>
+      <if test="examRecordDesc != null">
+        exam_record_desc,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="score != null">
+        #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="examId != null">
+        #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="examRecordDesc != null">
+        #{examRecordDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.ExamRecord">
+    update exam_record
+    <set>
+      <if test="score != null">
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="examId != null">
+        exam_id = #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="examRecordDesc != null">
+        exam_record_desc = #{examRecordDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.ExamRecord">
+    update exam_record
+    set score = #{score,jdbcType=DECIMAL},
+      student_id = #{studentId,jdbcType=INTEGER},
+      exam_id = #{examId,jdbcType=INTEGER},
+      exam_record_desc = #{examRecordDesc,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.ExamRecord" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from exam_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="score != null">
+        score = #{score,jdbcType=DECIMAL}
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="examId != null">
+        exam_id = #{examId,jdbcType=INTEGER}
+      </if>
+      <if test="examRecordDesc != null">
+        exam_record_desc = #{examRecordDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, score, student_id, exam_id, exam_record_desc, create_time
+    from exam_record
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.ExamRecord" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from exam_record
+    <trim prefix="where" suffixOverrides="and">
+      <if test="score != null">
+        score = #{score,jdbcType=DECIMAL}
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER}
+      </if>
+      <if test="examId != null">
+        exam_id = #{examId,jdbcType=INTEGER}
+      </if>
+      <if test="examRecordDesc != null">
+        exam_record_desc = #{examRecordDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from exam_record
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <sql id="queryWithClasses">
+      SELECT
+          er.id,
+          er.score,
+          er.exam_record_desc,
+          er.create_time,
+          stu.id prefix_stu_id,
+          stu.student_name prefix_stu_student_name,
+          stu.student_no prefix_stu_student_no,
+          stu.id_card prefix_stu_id_card,
+          stu.student_email prefix_stu_student_email,
+          stu.create_time prefix_stu_create_time,
+          e.id prefix_e_id,
+          e.exam_name prefix_e_exam_name,
+          e.exam_desc prefix_e_exam_desc,
+          cls.id prefix_cls_id,
+          cls.classes_name prefix_cls_classes_name,
+          cou.id prefix_cou_id,
+          cou.course_name prefix_cou_course_name
+      FROM
+          exam_record er
+          JOIN student stu ON er.student_id = stu.id
+          JOIN exam e ON er.exam_id = e.id
+          JOIN classes cls ON e.classes_id = cls.id
+          JOIN course cou ON e.course_id = cou.id
+  </sql>
+  <select id="query" parameterType="frank.model.Exam" resultMap="BaseResultMap">
+    <include refid="queryWithClasses" />
+    <if test="searchText != null and searchText != ''">
+      WHERE stu.student_name LIKE concat('%', #{searchText}, '%')
+    </if>
+    ORDER BY e.id, er.id
+    <if test="sortOrder != null and sortOrder != ''">
+      ${sortOrder}
+    </if>
+  </select>
+  <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <include refid="queryWithClasses" />
+    WHERE
+    er.id = #{id}
+  </select>
+</mapper>

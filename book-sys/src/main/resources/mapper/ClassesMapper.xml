@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.ClassesMapper">
+  <resultMap id="BaseResultMap" type="frank.model.Classes" extends="frank.mapper.DictionaryTagMapper.BaseResultMap">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="classes_name" jdbcType="VARCHAR" property="classesName" />
+    <result column="classes_graduate_year" jdbcType="VARCHAR" property="classesGraduateYear" />
+    <result column="classes_major" jdbcType="VARCHAR" property="classesMajor" />
+    <result column="classes_desc" jdbcType="VARCHAR" property="classesDesc" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, classes_name, classes_graduate_year, classes_major, classes_desc, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from classes
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from classes
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.Classes">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into classes (classes_name, classes_graduate_year, 
+      classes_major, classes_desc, create_time
+      )
+    values (#{classesName,jdbcType=VARCHAR}, #{classesGraduateYear,jdbcType=VARCHAR}, 
+      #{classesMajor,jdbcType=VARCHAR}, #{classesDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.Classes">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into classes
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="classesName != null">
+        classes_name,
+      </if>
+      <if test="classesGraduateYear != null">
+        classes_graduate_year,
+      </if>
+      <if test="classesMajor != null">
+        classes_major,
+      </if>
+      <if test="classesDesc != null">
+        classes_desc,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="classesName != null">
+        #{classesName,jdbcType=VARCHAR},
+      </if>
+      <if test="classesGraduateYear != null">
+        #{classesGraduateYear,jdbcType=VARCHAR},
+      </if>
+      <if test="classesMajor != null">
+        #{classesMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="classesDesc != null">
+        #{classesDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.Classes">
+    update classes
+    <set>
+      <if test="classesName != null">
+        classes_name = #{classesName,jdbcType=VARCHAR},
+      </if>
+      <if test="classesGraduateYear != null">
+        classes_graduate_year = #{classesGraduateYear,jdbcType=VARCHAR},
+      </if>
+      <if test="classesMajor != null">
+        classes_major = #{classesMajor,jdbcType=VARCHAR},
+      </if>
+      <if test="classesDesc != null">
+        classes_desc = #{classesDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.Classes">
+    update classes
+    set classes_name = #{classesName,jdbcType=VARCHAR},
+      classes_graduate_year = #{classesGraduateYear,jdbcType=VARCHAR},
+      classes_major = #{classesMajor,jdbcType=VARCHAR},
+      classes_desc = #{classesDesc,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.Classes" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from classes
+    <trim prefix="where" suffixOverrides="and">
+      <if test="classesName != null">
+        classes_name = #{classesName,jdbcType=VARCHAR}
+      </if>
+      <if test="classesGraduateYear != null">
+        classes_graduate_year = #{classesGraduateYear,jdbcType=VARCHAR}
+      </if>
+      <if test="classesMajor != null">
+        classes_major = #{classesMajor,jdbcType=VARCHAR}
+      </if>
+      <if test="classesDesc != null">
+        classes_desc = #{classesDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, classes_name, classes_graduate_year, classes_major, classes_desc, create_time
+    from classes
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.Classes" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from classes
+    <trim prefix="where" suffixOverrides="and">
+      <if test="classesName != null">
+        classes_name = #{classesName,jdbcType=VARCHAR}
+      </if>
+      <if test="classesGraduateYear != null">
+        classes_graduate_year = #{classesGraduateYear,jdbcType=VARCHAR}
+      </if>
+      <if test="classesMajor != null">
+        classes_major = #{classesMajor,jdbcType=VARCHAR}
+      </if>
+      <if test="classesDesc != null">
+        classes_desc = #{classesDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="searchText != null and searchText != ''">
+        classes_name like concat('%', #{searchText}, '%')
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from classes
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <select id="queryAsDict" parameterType="java.lang.String" resultMap="BaseResultMap">
+      SELECT
+          id dictionary_tag_key,
+          classes_name dictionary_tag_value,
+          classes_graduate_year,
+          classes_major
+      FROM
+          classes
+  </select>
+</mapper>

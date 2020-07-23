@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="frank.mapper.DictionaryMapper">
+  <resultMap id="BaseResultMap" type="frank.model.Dictionary">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dictionary_key" jdbcType="VARCHAR" property="dictionaryKey" />
+    <result column="dictionary_value" jdbcType="VARCHAR" property="dictionaryValue" />
+    <result column="dictionary_desc" jdbcType="VARCHAR" property="dictionaryDesc" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dictionary_key, dictionary_value, dictionary_desc, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dictionary
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="frank.model.Dictionary">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dictionary (dictionary_key, dictionary_value, dictionary_desc, 
+      create_time)
+    values (#{dictionaryKey,jdbcType=VARCHAR}, #{dictionaryValue,jdbcType=VARCHAR}, #{dictionaryDesc,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="frank.model.Dictionary">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dictionary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dictionaryKey != null">
+        dictionary_key,
+      </if>
+      <if test="dictionaryValue != null">
+        dictionary_value,
+      </if>
+      <if test="dictionaryDesc != null">
+        dictionary_desc,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dictionaryKey != null">
+        #{dictionaryKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryValue != null">
+        #{dictionaryValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryDesc != null">
+        #{dictionaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="frank.model.Dictionary">
+    update dictionary
+    <set>
+      <if test="dictionaryKey != null">
+        dictionary_key = #{dictionaryKey,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryValue != null">
+        dictionary_value = #{dictionaryValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryDesc != null">
+        dictionary_desc = #{dictionaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="frank.model.Dictionary">
+    update dictionary
+    set dictionary_key = #{dictionaryKey,jdbcType=VARCHAR},
+      dictionary_value = #{dictionaryValue,jdbcType=VARCHAR},
+      dictionary_desc = #{dictionaryDesc,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectOne" parameterType="frank.model.Dictionary" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dictionaryKey != null">
+        dictionary_key = #{dictionaryKey,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryValue != null">
+        dictionary_value = #{dictionaryValue,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryDesc != null">
+        dictionary_desc = #{dictionaryDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, dictionary_key, dictionary_value, dictionary_desc, create_time
+    from dictionary
+  </select>
+  <select id="selectByCondition" parameterType="frank.model.Dictionary" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dictionary
+    <trim prefix="where" suffixOverrides="and">
+      <if test="dictionaryKey != null">
+        dictionary_key = #{dictionaryKey,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryValue != null">
+        dictionary_value = #{dictionaryValue,jdbcType=VARCHAR}
+      </if>
+      <if test="dictionaryDesc != null">
+        dictionary_desc = #{dictionaryDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </select>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    delete from dictionary
+      where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>
