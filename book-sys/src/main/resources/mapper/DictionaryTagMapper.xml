@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="frank.mapper.DictionaryTagMapper">
-  <resultMap id="BaseResultMap" type="frank.model.DictionaryTag">
+<mapper namespace="org.example.mapper.DictionaryTagMapper">
+  <resultMap id="BaseResultMap" type="org.example.model.DictionaryTag">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="dictionary_tag_key" jdbcType="VARCHAR" property="dictionaryTagKey" />
     <result column="dictionary_tag_value" jdbcType="VARCHAR" property="dictionaryTagValue" />
@@ -23,10 +23,7 @@
     delete from dictionary_tag
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="frank.model.DictionaryTag">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.example.model.DictionaryTag" useGeneratedKeys="true">
     insert into dictionary_tag (dictionary_tag_key, dictionary_tag_value, 
       dictionary_tag_desc, dictionary_id, create_time
       )
@@ -34,10 +31,7 @@
       #{dictionaryTagDesc,jdbcType=VARCHAR}, #{dictionaryId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="frank.model.DictionaryTag">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.example.model.DictionaryTag" useGeneratedKeys="true">
     insert into dictionary_tag
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="dictionaryTagKey != null">
@@ -74,7 +68,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="frank.model.DictionaryTag">
+  <update id="updateByPrimaryKeySelective" parameterType="org.example.model.DictionaryTag">
     update dictionary_tag
     <set>
       <if test="dictionaryTagKey != null">
@@ -95,7 +89,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="frank.model.DictionaryTag">
+  <update id="updateByPrimaryKey" parameterType="org.example.model.DictionaryTag">
     update dictionary_tag
     set dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR},
       dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR},
@@ -104,54 +98,54 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectOne" parameterType="frank.model.DictionaryTag" resultMap="BaseResultMap">
+  <select id="selectOne" parameterType="org.example.model.DictionaryTag" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from dictionary_tag
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="dictionaryTagKey != null">
-        dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR}
+        and dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR}
       </if>
       <if test="dictionaryTagValue != null">
-        dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR}
+        and dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR}
       </if>
       <if test="dictionaryTagDesc != null">
-        dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR}
+        and dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR}
       </if>
       <if test="dictionaryId != null">
-        dictionary_id = #{dictionaryId,jdbcType=INTEGER}
+        and dictionary_id = #{dictionaryId,jdbcType=INTEGER}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, dictionary_tag_key, dictionary_tag_value, dictionary_tag_desc, dictionary_id, 
     create_time
     from dictionary_tag
   </select>
-  <select id="selectByCondition" parameterType="frank.model.DictionaryTag" resultMap="BaseResultMap">
+  <select id="selectByCondition" parameterType="org.example.model.DictionaryTag" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from dictionary_tag
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="dictionaryTagKey != null">
-        dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR}
+        and dictionary_tag_key = #{dictionaryTagKey,jdbcType=VARCHAR}
       </if>
       <if test="dictionaryTagValue != null">
-        dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR}
+        and dictionary_tag_value = #{dictionaryTagValue,jdbcType=VARCHAR}
       </if>
       <if test="dictionaryTagDesc != null">
-        dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR}
+        and dictionary_tag_desc = #{dictionaryTagDesc,jdbcType=VARCHAR}
       </if>
       <if test="dictionaryId != null">
-        dictionary_id = #{dictionaryId,jdbcType=INTEGER}
+        and dictionary_id = #{dictionaryId,jdbcType=INTEGER}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <delete id="deleteByIds" parameterType="java.util.List">
     delete from dictionary_tag
@@ -161,14 +155,16 @@
     </foreach>
   </delete>
 
-  <select id="selectByFullKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-      SELECT
-          concat( d.dictionary_key, dt.dictionary_tag_key) dictionary_tag_key,
-          dt.dictionary_tag_value
-      FROM
-          dictionary d
-              JOIN dictionary_tag dt ON d.id = dt.dictionary_id
-      WHERE
-          d.dictionary_key = #{dictionaryKey}
+
+
+
+  <!-- 自定义SQL -->
+  <select id="query" resultMap="BaseResultMap">
+    select
+       concat(d.dictionary_key, dt.dictionary_tag_key) dictionary_tag_key,
+       dt.dictionary_tag_value
+    from dictionary_tag dt
+        join dictionary d on d.id=dt.dictionary_id
+      where d.dictionary_key=#{key}
   </select>
 </mapper>

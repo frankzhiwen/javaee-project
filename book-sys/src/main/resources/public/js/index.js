@@ -19,7 +19,7 @@ function resetConfirmPassword(){
     });
 }
 
-let dev = true;
+let dev = false;
 let devLoginData = {
     username: "abc",
     password: "123"
@@ -38,8 +38,9 @@ $(function () {
                 data: dev === true ? JSON.stringify(devLoginData) : $(form).serializeJsonString(),
                 success: function () {
                     showSuccessModal("登录成功", function () {
-                        window.location.href = "public/page/main.html";
+                        window.location.href = "page/main.html";
                     });
+
                 },
                 error: function (error) {
                     $(form).removeClass("was-validated");

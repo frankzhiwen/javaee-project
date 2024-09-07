@@ -4,8 +4,8 @@ function logout(){
         contentType: "application/json",
         success: function (r) {
             showSuccessModal("注销成功", function () {
-                window.location.href = "public/index.html";
-            });
+                window.location.href = "index.html";
+            }, 1500);
         },
         error: function (error) {
             showError(error);
@@ -58,7 +58,6 @@ let classesTabOptions = {
     },{
         title: '描述',
         field: 'classesDesc',
-        type: "textarea",
     },{
         title: '创建时间',
         field: 'createTime',

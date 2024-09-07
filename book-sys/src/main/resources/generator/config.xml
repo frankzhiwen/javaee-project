@@ -4,26 +4,37 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
+
+    <!-- 引入某个配置文件的信息，以 ${键} 的方式获取值 -->
     <properties resource="application.properties" />
 
-    <context id="Mysql" targetRuntime="MyBatis3" defaultModelType="flat">
+    <context id="Mysql" defaultModelType="flat" targetRuntime="MyBatis3">
 
+        <!-- 表名或字段名为关键字的时候，生成的sql中给表名或字段名添加分隔符 ` -->
+        <property name="beginningDelimiter" value="true" />
+        <property name="endingDelimiter" value="true" />
+
+        <!-- 生成的Java文件的编码 -->
         <property name="javaFileEncoding" value="UTF-8"/>
-        <!--配置是否使用通用 Mapper 自带的注释扩展，默认 true-->
-        <!--        <property name="useMapperCommentGenerator" value="false"/>-->
-        <plugin type="frank.tool.DefaultGeneratorPlugin">
-            <property name="rootMappers" value="frank.base.BaseMapper" />
+
+        <!-- 自定义插件：Mapper不生成方法，指定父接口来继承使用 -->
+        <plugin type="org.example.tool.DefaultGeneratorPlugin">
+            <property name="rootMappers" value="org.example.base.BaseMapper" />
             <property name="lombok" value="Getter,Setter,ToString"/>
         </plugin>
 
-        <commentGenerator type="frank.tool.DefaultCommentGenerator">
-        </commentGenerator>
+        <!-- 自定义插件：生成的XML文件会覆盖已有文件 -->
+        <plugin type="org.example.tool.OverIsMergeablePlugin" />
 
-        <!--配置数据库的链接信息-->
+        <!-- 自定义注释插件：生成的实体类中，根据表和字段的comment生成注释 -->
+        <commentGenerator type="org.example.tool.DefaultCommentGenerator" />
+
+        <!-- JDBC连接配置 -->
         <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
                         connectionURL="${spring.datasource.url}"
                         userId="${spring.datasource.username}"
                         password="${spring.datasource.password}">
+            <!-- 读取数据库表定义的注释信息 -->
             <property name="useInformationSchema" value="true" />
         </jdbcConnection>
 
@@ -33,55 +44,37 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
 
-        <!--MyBatis 生成器只需要生成 Model-->
-        <javaModelGenerator targetProject="book-sys/src/test/java"
-                            targetPackage="frank.model">
-            <property name="rootClass" value="frank.base.BaseEntity"/>
+        <!-- 生成实体类的配置 -->
+        <javaModelGenerator targetProject="src/test/java"
+                            targetPackage="org.example.model">
+            <!-- 指定需要继承的父类 -->
+            <property name="rootClass" value="org.example.base.BaseEntity"/>
         </javaModelGenerator>
 
-        <!--mybatis 的xml文件地址-->
-        <sqlMapGenerator targetProject="book-sys/src/test/resources"
+        <!-- 生成XML文件的配置 -->
+        <sqlMapGenerator targetProject="src/test/resources"
                          targetPackage="mapper">
-            <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <!--mybatis的mapper接口-->
+        <!-- 生成Mapper接口配置 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetProject="book-sys/src/test/java"
-                             targetPackage="frank.mapper">
-            <property name="enableSubPackages" value="true"/>
+                             targetProject="src/test/java"
+                             targetPackage="org.example.mapper">
+            <!-- 指定要继承的父接口 -->
+            <!--            <property name="rootInterface" value="org.example.base.BaseMapper"/>-->
         </javaClientGenerator>
 
-        <table tableName="%" enableCountByExample="false"
+        <!-- 需要生成的表，%表示模糊匹配，也可以指定具体的表名 -->
+        <table tableName="%"
+               enableCountByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
-               enableUpdateByExample="false">
-            <!--            <generatedKey column="id" sqlStatement="JDBC"/>-->
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+               enableUpdateByExample="false"
+        >
+            <!-- insert方法通过自增主键插入数据后，主键值是否设置到对象属性中 -->
+            <generatedKey column="id" sqlStatement="JDBC"/>
+            <!-- 字段覆盖：表中content字段为text数据类型时，默认会生成为二进制，可以指定为字符串 -->
+<!--            <columnOverride column="content" jdbcType="VARCHAR" />-->
         </table>
-        <!--        <table tableName="user">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="dictionary">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="dictionary_tag">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="classes">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="student">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="course">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="exam">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
-        <!--        <table tableName="exam_record">-->
-        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-        <!--        </table>-->
     </context>
 </generatorConfiguration>

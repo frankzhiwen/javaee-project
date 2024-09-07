@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="frank.mapper.BookMapper">
-  <resultMap id="BaseResultMap" type="frank.model.Book" extends="frank.mapper.DictionaryTagMapper.BaseResultMap">
+<mapper namespace="org.example.mapper.BookMapper">
+  <resultMap id="BaseResultMap" type="org.example.model.Book"
+      extends="org.example.mapper.DictionaryTagMapper.BaseResultMap">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="book_name" jdbcType="VARCHAR" property="bookName" />
     <result column="author" jdbcType="VARCHAR" property="author" />
@@ -21,19 +22,13 @@
     delete from book
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="frank.model.Book">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.example.model.Book" useGeneratedKeys="true">
     insert into book (book_name, author, price, 
       create_time)
     values (#{bookName,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="frank.model.Book">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.example.model.Book" useGeneratedKeys="true">
     insert into book
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="bookName != null">
@@ -64,7 +59,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="frank.model.Book">
+  <update id="updateByPrimaryKeySelective" parameterType="org.example.model.Book">
     update book
     <set>
       <if test="bookName != null">
@@ -82,7 +77,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="frank.model.Book">
+  <update id="updateByPrimaryKey" parameterType="org.example.model.Book">
     update book
     set book_name = #{bookName,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
@@ -90,47 +85,47 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectOne" parameterType="frank.model.Book" resultMap="BaseResultMap">
+  <select id="selectOne" parameterType="org.example.model.Book" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from book
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="bookName != null">
-        book_name = #{bookName,jdbcType=VARCHAR}
+        and book_name = #{bookName,jdbcType=VARCHAR}
       </if>
       <if test="author != null">
-        author = #{author,jdbcType=VARCHAR}
+        and author = #{author,jdbcType=VARCHAR}
       </if>
       <if test="price != null">
-        price = #{price,jdbcType=DECIMAL}
+        and price = #{price,jdbcType=DECIMAL}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, book_name, author, price, create_time
     from book
   </select>
-  <select id="selectByCondition" parameterType="frank.model.Book" resultMap="BaseResultMap">
+  <select id="selectByCondition" parameterType="org.example.model.Book" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from book
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="bookName != null">
-        book_name = #{bookName,jdbcType=VARCHAR}
+        and book_name = #{bookName,jdbcType=VARCHAR}
       </if>
       <if test="author != null">
-        author = #{author,jdbcType=VARCHAR}
+        and author = #{author,jdbcType=VARCHAR}
       </if>
       <if test="price != null">
-        price = #{price,jdbcType=DECIMAL}
+        and price = #{price,jdbcType=DECIMAL}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <delete id="deleteByIds" parameterType="java.util.List">
     delete from book
@@ -140,13 +135,16 @@
     </foreach>
   </delete>
 
-  <select id="queryAsDict" parameterType="java.lang.String" resultMap="BaseResultMap">
-      SELECT
-          id dictionary_tag_key,
-          book_name dictionary_tag_value,
-          author,
-          price
-      FROM
-          book
+
+
+
+  <!-- 自定义SQL -->
+  <select id="queryAsDict" resultMap="BaseResultMap">
+    select
+        id dictionary_tag_key,
+        book_name dictionary_tag_value,
+        author,
+        price
+    from book
   </select>
 </mapper>

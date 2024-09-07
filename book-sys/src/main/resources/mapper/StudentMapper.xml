@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="frank.mapper.StudentMapper">
-  <resultMap id="BaseResultMap" type="frank.model.Student" extends="frank.mapper.DictionaryTagMapper.BaseResultMap">
+<mapper namespace="org.example.mapper.StudentMapper">
+  <resultMap id="BaseResultMap" type="org.example.model.Student"
+    extends="org.example.mapper.DictionaryTagMapper.BaseResultMap">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="student_name" jdbcType="VARCHAR" property="studentName" />
     <result column="student_no" jdbcType="VARCHAR" property="studentNo" />
@@ -10,8 +11,8 @@
     <result column="classes_id" jdbcType="INTEGER" property="classesId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <association property="classes"
-                 resultMap="frank.mapper.ClassesMapper.BaseResultMap"
-                 columnPrefix="prefix_c_" />
+                 columnPrefix="c_"
+                 resultMap="org.example.mapper.ClassesMapper.BaseResultMap" />
   </resultMap>
   <sql id="Base_Column_List">
     id, student_name, student_no, id_card, student_email, classes_id, create_time
@@ -26,10 +27,7 @@
     delete from student
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="frank.model.Student">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.example.model.Student" useGeneratedKeys="true">
     insert into student (student_name, student_no, id_card, 
       student_email, classes_id, create_time
       )
@@ -37,10 +35,7 @@
       #{studentEmail,jdbcType=VARCHAR}, #{classesId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="frank.model.Student">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.example.model.Student" useGeneratedKeys="true">
     insert into student
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="studentName != null">
@@ -83,7 +78,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="frank.model.Student">
+  <update id="updateByPrimaryKeySelective" parameterType="org.example.model.Student">
     update student
     <set>
       <if test="studentName != null">
@@ -107,7 +102,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="frank.model.Student">
+  <update id="updateByPrimaryKey" parameterType="org.example.model.Student">
     update student
     set student_name = #{studentName,jdbcType=VARCHAR},
       student_no = #{studentNo,jdbcType=VARCHAR},
@@ -117,59 +112,59 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectOne" parameterType="frank.model.Student" resultMap="BaseResultMap">
+  <select id="selectOne" parameterType="org.example.model.Student" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from student
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="studentName != null">
-        student_name = #{studentName,jdbcType=VARCHAR}
+        and student_name = #{studentName,jdbcType=VARCHAR}
       </if>
       <if test="studentNo != null">
-        student_no = #{studentNo,jdbcType=VARCHAR}
+        and student_no = #{studentNo,jdbcType=VARCHAR}
       </if>
       <if test="idCard != null">
-        id_card = #{idCard,jdbcType=VARCHAR}
+        and id_card = #{idCard,jdbcType=VARCHAR}
       </if>
       <if test="studentEmail != null">
-        student_email = #{studentEmail,jdbcType=VARCHAR}
+        and student_email = #{studentEmail,jdbcType=VARCHAR}
       </if>
       <if test="classesId != null">
-        classes_id = #{classesId,jdbcType=INTEGER}
+        and classes_id = #{classesId,jdbcType=INTEGER}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, student_name, student_no, id_card, student_email, classes_id, create_time
     from student
   </select>
-  <select id="selectByCondition" parameterType="frank.model.Student" resultMap="BaseResultMap">
+  <select id="selectByCondition" parameterType="org.example.model.Student" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from student
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="studentName != null">
-        student_name = #{studentName,jdbcType=VARCHAR}
+        and student_name = #{studentName,jdbcType=VARCHAR}
       </if>
       <if test="studentNo != null">
-        student_no = #{studentNo,jdbcType=VARCHAR}
+        and student_no = #{studentNo,jdbcType=VARCHAR}
       </if>
       <if test="idCard != null">
-        id_card = #{idCard,jdbcType=VARCHAR}
+        and id_card = #{idCard,jdbcType=VARCHAR}
       </if>
       <if test="studentEmail != null">
-        student_email = #{studentEmail,jdbcType=VARCHAR}
+        and student_email = #{studentEmail,jdbcType=VARCHAR}
       </if>
       <if test="classesId != null">
-        classes_id = #{classesId,jdbcType=INTEGER}
+        and classes_id = #{classesId,jdbcType=INTEGER}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <delete id="deleteByIds" parameterType="java.util.List">
     delete from student
@@ -179,46 +174,44 @@
     </foreach>
   </delete>
 
-  <sql id="queryWithClasses">
-      SELECT
-          s.id,
-          s.student_name,
-          s.student_no,
-          s.id_card,
-          s.student_email,
-          s.classes_id,
-          s.create_time,
-          c.id prefix_c_id,
-          c.classes_name prefix_c_classes_name,
-          c.classes_graduate_year prefix_c_classes_graduate_year,
-          c.classes_major prefix_c_classes_major,
-          c.classes_desc prefix_c_classes_desc,
-          c.create_time prefix_c_create_time
-      FROM
-          student s
-      JOIN classes c ON s.classes_id=c.id
-  </sql>
-  <select id="query" parameterType="frank.model.Student" resultMap="BaseResultMap">
-    <include refid="queryWithClasses" />
-    <if test="searchText != null and searchText != ''">
-      where s.student_name like concat('%', #{searchText}, '%')
-    </if>
+
+
+
+  <!-- 自定义SQL -->
+  <select id="queryAsDict" resultMap="BaseResultMap">
+    select
+        s.id dictionary_tag_key,
+        s.student_name dictionary_tag_value,
+        s.student_no,
+        s.id_card
+    from student s
+        join classes c on s.classes_id=c.id
+    where c.id=#{id}
   </select>
-  <select id="queryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    <include refid="queryWithClasses" />
+  <select id="query" resultMap="BaseResultMap">
+    select
+        s.*,
+        c.id c_id,
+        c.classes_name c_classes_name,
+        c.classes_graduate_year c_classes_graduate_year,
+        c.classes_major c_classes_major
+    from student s
+        join classes c on s.classes_id=c.id
     where
-    s.id = #{id}
+        s.student_name like #{searchText}
+        order by s.create_time ${sortOrder}
   </select>
-  <select id="queryAsDict" parameterType="java.lang.String" resultMap="BaseResultMap">
-      SELECT
-          s.id dictionary_tag_key,
-          s.student_name dictionary_tag_value,
-          s.student_no,
-          s.id_card
-      FROM
-          student s
-          JOIN classes c ON s.classes_id = c.id
-      WHERE
-          c.id = #{id}
+
+  <select id="queryById" resultMap="BaseResultMap">
+    select
+      s.*,
+      c.id c_id,
+      c.classes_name c_classes_name,
+      c.classes_graduate_year c_classes_graduate_year,
+      c.classes_major c_classes_major
+    from student s
+           join classes c on s.classes_id=c.id
+    where
+      s.id=#{id}
   </select>
 </mapper>

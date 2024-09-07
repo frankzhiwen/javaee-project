@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="frank.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="frank.model.User">
+<mapper namespace="org.example.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="org.example.model.User">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -22,19 +22,13 @@
     delete from user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="frank.model.User">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.example.model.User" useGeneratedKeys="true">
     insert into user (username, password, nickname, 
       email, create_time)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="frank.model.User">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.example.model.User" useGeneratedKeys="true">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -71,7 +65,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="frank.model.User">
+  <update id="updateByPrimaryKeySelective" parameterType="org.example.model.User">
     update user
     <set>
       <if test="username != null">
@@ -92,7 +86,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="frank.model.User">
+  <update id="updateByPrimaryKey" parameterType="org.example.model.User">
     update user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -101,57 +95,53 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectOne" parameterType="frank.model.User" resultMap="BaseResultMap">
+  <select id="selectOne" parameterType="org.example.model.User" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from user
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="username != null">
-        username = #{username,jdbcType=VARCHAR}
+        and username = #{username,jdbcType=VARCHAR}
       </if>
       <if test="password != null">
-        password = #{password,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
       </if>
       <if test="nickname != null">
-        nickname = #{nickname,jdbcType=VARCHAR}
+        and nickname = #{nickname,jdbcType=VARCHAR}
       </if>
       <if test="email != null">
-        email = #{email,jdbcType=VARCHAR}
+        and email = #{email,jdbcType=VARCHAR}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-    </trim>
+    </where>
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, username, password, nickname, email, create_time
     from user
   </select>
-  <select id="selectByCondition" parameterType="frank.model.User" resultMap="BaseResultMap">
+  <select id="selectByCondition" parameterType="org.example.model.User" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from user
-    <trim prefix="where" suffixOverrides="and">
+    <where>
       <if test="username != null">
-        username = #{username,jdbcType=VARCHAR}
+        and username = #{username,jdbcType=VARCHAR}
       </if>
       <if test="password != null">
-        password = #{password,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
       </if>
       <if test="nickname != null">
-        nickname = #{nickname,jdbcType=VARCHAR}
+        and nickname = #{nickname,jdbcType=VARCHAR}
       </if>
       <if test="email != null">
-        email = #{email,jdbcType=VARCHAR}
+        and email = #{email,jdbcType=VARCHAR}
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP}
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
       </if>
-      <if test="searchText != null and searchText != ''">
-        (username like concat('%', #{searchText}, '%')
-        or nickname like concat('%', #{searchText}, '%'))
-      </if>
-    </trim>
+    </where>
   </select>
   <delete id="deleteByIds" parameterType="java.util.List">
     delete from user

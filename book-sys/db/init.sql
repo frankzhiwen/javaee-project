@@ -1,7 +1,7 @@
-drop database if exists book;
-create database book character set utf8mb4;
+drop database if exists book_sys;
+create database book_sys character set utf8mb4;
 
-use book;
+use book_sys;
 
 drop table if exists user;
 create table user(
@@ -71,9 +71,7 @@ create table borrow_record(
    student_id int comment '学生id',
    start_time timestamp not null comment '借阅日期',
    end_time timestamp null default null comment '归还日期',
-   create_time timestamp default NOW() comment '创建时间',
-   foreign key (book_id) references book(id),
-   foreign key (student_id) references student(id)
+   create_time timestamp default NOW() comment '创建时间'
 ) comment '图书借阅信息';
 
 
